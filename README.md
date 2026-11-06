@@ -95,11 +95,11 @@ hms/
 
 ## Docker
 
-The Dockerfile is in `hms/`. From that directory, build and run the development container:
+The repository-root `Dockerfile` is configured for platforms that build from the repository root. From the repository directory, build and run the development container:
 
 ```powershell
 docker build -t hospital-management-system .
 docker run --rm -p 8000:8000 hospital-management-system
 ```
 
-The container starts Django's development server. Before deploying publicly, configure production settings, including a secret key, `DEBUG`, allowed hosts, database, and static/media file serving.
+For a deployment platform, set the build context or root directory to the repository root so it finds `Dockerfile`. The container starts Django's development server. Before deploying publicly, configure production settings, including a secret key, `DEBUG`, allowed hosts, database, and static/media file serving.
