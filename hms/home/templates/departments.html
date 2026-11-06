@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}Departments{% endblock %}
+
+{% block content %}
+  <section class="department-hero">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-8">
+        <div class="eyebrow">Medical Excellence</div>
+        <h1>Advanced Care Across Every Specialty</h1>
+        <p>
+          Our hospital brings together compassionate specialists, cutting-edge technology,
+          and patient-first care to deliver safe and efficient treatment in every department.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-light text-primary fw-bold" href="{% url 'booking' %}">Book Appointment</a>
+          <a class="btn btn-outline-light" href="{% url 'doctors' %}">Meet Our Doctors</a>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="hero-panel">
+          <h4>Hospital Snapshot</h4>
+          <div class="mini-stat">
+            <span>Departments</span>
+            <strong>{{ departments|length }}</strong>
+          </div>
+          <div class="mini-stat">
+            <span>Specialists</span>
+            <strong>{{ doctor_count }}</strong>
+          </div>
+          <div class="mini-stat">
+            <span>Emergency Care</span>
+            <strong>24/7</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-heading">
+    <h2>Our Departments</h2>
+    <p>Discover the care teams focused on your health, recovery, and wellness.</p>
+  </div>
+
+  <div class="departments-grid">
+    {% if departments %}
+      {% for d in departments %}
+        <article class="department-card">
+          <div class="icon-wrap">✚</div>
+          <div class="card-body">
+            <h3>{{ d.dept_name }}</h3>
+            <p>{{ d.dept_desc }}</p>
+            <ul class="service-list">
+              <li>Consultation & diagnosis</li>
+              <li>Advanced treatment plans</li>
+              <li>Patient-centered care</li>
+            </ul>
+          </div>
+        </article>
+      {% empty %}
+        <div class="empty-state">No departments available right now. Please check back soon.</div>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state">No departments available right now. Please check back soon.</div>
+    {% endif %}
+  </div>
+{% endblock %}

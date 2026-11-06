@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Doctor Recommendation</title>
+  </head>
+  <body>
+    <h1>Smart Doctor Recommendation</h1>
+
+    <p>Enter your symptoms to find doctors with relevant specializations.</p>
+
+    <form method="POST">
+      {% csrf_token %}
+
+      <label for="symptoms">Describe your symptoms:</label>
+      <br /><br />
+
+      <textarea
+        id="symptoms"
+        name="symptoms"
+        rows="4"
+        cols="40"
+        placeholder="Example: I have a skin rash and itching"
+        required
+      >
+{{ symptoms }}</textarea
+      >
+
+      <br /><br />
+      <button type="submit">Find Doctors</button>
+    </form>
+
+    {% if searched %}
+    <h2>Recommended Doctors</h2>
+    {% if doctors %} {% for doctor in doctors %}
+    <div>
+      <h3>{{ doctor.doc_name }}</h3>
+      <p>Specialization: {{ doctor.doctor_specialisation }}</p>
+      <p>Department: {{ doctor.dept_name.dept_name }}</p>
+      {% if doctor.doctor_image %}
+      <img
+        src="{{ doctor.doct_image.url }}"
+        alt="{{ doctor.doctor_name }}"
+        width="120"
+      />
+      {% endif %}
+    </div>
+    <hr />
+    {% endfor %} {% else %}
+    <p>No matching doctors found. Try describing your symptoms differently.</p>
+    {% endif %} {% endif %}
+    <p>
+      This tool suggests specialties only; it does not diagnose medical
+      conditions. Seek urgent medical care for emergency symptoms.
+    </p>
+  </body>
+</html>

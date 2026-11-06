@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Doctors | Hospital Management System{% endblock %}
+
+{% block content %}
+  <section class="doctors-hero">
+    <div class="doctors-hero-orbit doctors-hero-orbit-one" aria-hidden="true"></div>
+    <div class="doctors-hero-orbit doctors-hero-orbit-two" aria-hidden="true"></div>
+    <div class="doctors-hero-content">
+      <span class="doctors-eyebrow"><span aria-hidden="true">✚</span> Here for your health</span>
+      <h1>Meet your <span>care team.</span></h1>
+      <p>Get to know our doctors and find the right specialist for your care.</p>
+      <a class="doctors-hero-link" href="{% url 'booking' %}">Book an appointment <span aria-hidden="true">→</span></a>
+    </div>
+    <div class="doctors-hero-art" aria-hidden="true">
+      <span class="doctors-hero-cross">+</span>
+      <span class="doctors-hero-caption">Compassionate<br>expert care</span>
+    </div>
+    <div class="doctors-hero-footer" aria-hidden="true">
+      <span>EXPERTISE</span>
+      <span>COMPASSION</span>
+      <span>YOUR HEALTH</span>
+    </div>
+  </section>
+
+  <section class="doctors-directory">
+    <div class="doctors-section-heading">
+      <div>
+        <span class="doctors-section-label">Our medical team</span>
+        <h2>Our <span>Doctors</span></h2>
+        <p class="doctors-section-description">Experienced professionals, focused on your well-being.</p>
+      </div>
+      <div class="doctors-team-count">
+        <span class="doctors-team-count-icon" aria-hidden="true">+</span>
+        <span>
+          <strong>{{ doctors|length }}</strong>
+          <small>care professionals</small>
+        </span>
+      </div>
+    </div>
+
+    {% if doctors %}
+      <div class="doctors-grid">
+        {% for doctor in doctors %}
+          <article class="doctor-card">
+            <div class="doctor-card-image">
+              {% if doctor.doctor_image %}
+                <img src="{{ doctor.doctor_image.url }}" alt="{{ doctor.doctor_name }}">
+              {% else %}
+                <div class="doctor-image-placeholder" aria-hidden="true">
+                  <span>{{ doctor.doctor_name|first|upper }}</span>
+                </div>
+              {% endif %}
+              <div class="doctor-image-shade" aria-hidden="true"></div>
+              <span class="doctor-department-tag">{{ doctor.dept_name.dept_name }}</span>
+            </div>
+            <div class="doctor-card-content">
+              <div class="doctor-card-label"><span aria-hidden="true">✚</span> SPECIALIST</div>
+              <h3>{{ doctor.doctor_name }}</h3>
+              <p class="doctor-specialty">{{ doctor.doctor_specialisation }}</p>
+              <a class="doctor-contact-link" href="{% url 'booking' %}">
+                Book an appointment <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="doctors-empty-state">
+        <span class="doctors-empty-icon" aria-hidden="true">+</span>
+        <h3>Our doctor directory is being updated</h3>
+        <p>Please check back soon to meet our care team.</p>
+      </div>
+    {% endif %}
+  </section>
+{% endblock %}

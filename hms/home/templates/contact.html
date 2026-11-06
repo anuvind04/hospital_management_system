@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact | Hospital Management System{% endblock %}
+
+{% block content %}
+  <section class="page-heading">
+    <span class="page-eyebrow">We are here to help</span>
+    <h1>Contact us</h1>
+    <p>This is the contact page for the hospital management system.</p>
+  </section>
+
+  <section class="contact-panel">
+    <div>
+      <h2>How can we help?</h2>
+      <p>Browse our departments or find a doctor to plan your next step.</p>
+    </div>
+    <div class="home-hero-actions">
+      <a class="btn btn-primary" href="{% url 'doctors' %}">Find a doctor</a>
+      <a class="btn btn-outline-primary" href="{% url 'booking' %}">Book an appointment</a>
+    </div>
+  </section>
+{% endblock %}

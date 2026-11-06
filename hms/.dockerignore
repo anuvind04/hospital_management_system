@@ -1,0 +1,15 @@
+Put:
+venv/
+env/
+.venv/
+
+__pycache__/
+*.pyc
+*.pyo
+
+.git/
+.gitignore
+
+.env
+
+*.sqlite3-journal

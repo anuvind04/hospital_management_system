@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Home | Hospital Management System{% endblock %}
+
+{% block content %}
+  <section class="home-hero">
+    <div class="home-hero-content">
+      <span class="page-eyebrow">Care centered around you</span>
+      <h1>Better care starts with the right team.</h1>
+      <p>
+        Find a specialist, explore our departments, and plan your next appointment
+        with our hospital management system.
+      </p>
+      <div class="home-hero-actions">
+        <a class="btn btn-primary" href="{% url 'booking' %}">Book an appointment</a>
+        <a class="btn btn-outline-primary" href="{% url 'doctors' %}">Meet our doctors</a>
+      </div>
+    </div>
+    <div class="home-hero-art" aria-hidden="true">+</div>
+  </section>
+
+  <section class="home-link-grid" aria-label="Explore the hospital">
+    <a class="home-link-card" href="{% url 'departments' %}">
+      <span class="home-link-icon" aria-hidden="true">✚</span>
+      <span>
+        <strong>Our departments</strong>
+        <small>Explore our areas of care</small>
+      </span>
+      <span class="home-link-arrow" aria-hidden="true">→</span>
+    </a>
+    <a class="home-link-card" href="{% url 'doctors' %}">
+      <span class="home-link-icon" aria-hidden="true">+</span>
+      <span>
+        <strong>Find a doctor</strong>
+        <small>Meet our care team</small>
+      </span>
+      <span class="home-link-arrow" aria-hidden="true">→</span>
+    </a>
+    <a class="home-link-card" href="{% url 'contact' %}">
+      <span class="home-link-icon" aria-hidden="true">⌖</span>
+      <span>
+        <strong>Get in touch</strong>
+        <small>Contact the hospital</small>
+      </span>
+      <span class="home-link-arrow" aria-hidden="true">→</span>
+    </a>
+  </section>
+{% endblock %}

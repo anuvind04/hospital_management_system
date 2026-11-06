@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}About | Hospital Management System{% endblock %}
+
+{% block content %}
+  <section class="page-heading">
+    <span class="page-eyebrow">About the hospital</span>
+    <h1>Care built around people</h1>
+    <p>This is the about page for the hospital management system.</p>
+  </section>
+
+  <section class="info-card">
+    <h2>Our community</h2>
+    <div class="people-grid">
+      {% for student in students %}
+        <div class="person-card">{{ student }}</div>
+      {% empty %}
+        <p class="empty-state">No community members to display.</p>
+      {% endfor %}
+    </div>
+  </section>
+{% endblock %}
