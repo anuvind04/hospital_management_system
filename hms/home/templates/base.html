@@ -28,8 +28,18 @@
             {% if user.is_staff %}
   <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a></li>
 {% endif %}
-{% if user.doctor_profile %}
-  <li class="nav-item"><a class="nav-link" href="{% url 'doctor_dashboard' %}">My Appointments</a></li>
+{% if user.is_authenticated %}
+  {% if user.is_authenticated %}
+    {% with doctor_profile=user.doctor_profile %}
+        {% if doctor_profile %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'doctor_dashboard' %}">
+                    My Appointments
+                </a>
+            </li>
+        {% endif %}
+    {% endwith %}
+{% endif %}
 {% endif %}
             <li class="nav-item">
               {% if user.is_authenticated %}
