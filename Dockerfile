@@ -1,5 +1,4 @@
-
-FROM python:3.14.3-slim
+  FROM python:3.14.3-slim
 
 WORKDIR /app
 
@@ -15,4 +14,4 @@ RUN python manage.py collectstatic --noinput
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "python manage.py migrate && exec gunicorn hms.wsgi:application --bind 0.0.0.0:${PORT:-8000}"]
+CMD ["sh", "-c", "python manage.py migrate && python manage.py create_render_superuser && exec gunicorn hms.wsgi:application --bind 0.0.0.0:${PORT:-8000}"]
