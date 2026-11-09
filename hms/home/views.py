@@ -1,4 +1,4 @@
-
+from django.db.models import Q
 from django.shortcuts import (
     get_object_or_404,
     redirect,
@@ -94,9 +94,9 @@ def booking(request, doctor_id=None):
     return render(request, "Booking.html", {"form": form})
 
 
+
 @login_required
 def patient_dashboard(request):
-
     patient_profile, created = Profile.objects.get_or_create(
         user=request.user
     )
@@ -106,11 +106,12 @@ def patient_dashboard(request):
     ).select_related(
         'doctor_name',
         'doctor_name__dept_name'
-    ).order_by('-booked_on', '-appointment_time')
+    ).order_by('-created_at')
 
     context = {
         'patient_profile': patient_profile,
         'appointments': appointments,
+
         'total_appointments': appointments.count(),
         'pending_appointments': appointments.filter(
             status='Pending'
@@ -118,8 +119,14 @@ def patient_dashboard(request):
         'approved_appointments': appointments.filter(
             status='Approved'
         ).count(),
+        'rejected_appointments': appointments.filter(
+            status='Rejected'
+        ).count(),
         'completed_appointments': appointments.filter(
             status='Completed'
+        ).count(),
+        'cancelled_appointments': appointments.filter(
+            status='Cancelled'
         ).count(),
     }
 
@@ -128,7 +135,6 @@ def patient_dashboard(request):
         'patient_dashboard.html',
         context
     )
-
 
 @login_required
 @require_POST
@@ -216,7 +222,12 @@ def dashboard(request):
     context = {
         "total_doctors": doctor.objects.count(),
         "total_departments": dept.objects.count(),
-        "total_patients": User.objects.filter(is_staff=False).count(),
+        "total_patients": Profile.objects.filter(
+    user__is_staff=False,
+    user__is_superuser=False
+).exclude(
+    user__doctor_profile__isnull=False
+).count(),
         "total_appointments": bookings.count(),
         "pending_appointments": status_counts['Pending'],
         "status_counts": status_counts,
@@ -236,6 +247,124 @@ STATUS_TRANSITIONS = {
     'Pending': ['Approved', 'Rejected'],
     'Approved': ['Completed', 'Rejected'],
 }
+
+
+# Staff-only patient list
+@login_required(login_url='login')
+def admin_patients(request):
+    if not request.user.is_staff:
+        return redirect('patient_dashboard')
+
+    search = request.GET.get('q', '').strip()
+
+    patients = Profile.objects.select_related('user').filter(
+        user__is_staff=False,
+        user__is_superuser=False
+    ).exclude(
+        user__doctor_profile__isnull=False
+    )
+
+    if search:
+        patients = patients.filter(
+            Q(user__username__icontains=search) |
+            Q(user__email__icontains=search) |
+            Q(phone_number__icontains=search) |
+            Q(address__icontains=search)
+        )
+
+    return render(request, 'home/records_list.html', {
+        'page_title': 'Patients',
+        'page_type': 'patients',
+        'records': patients.order_by('user__username'),
+        'search': search,
+    })
+
+
+# Staff-only doctor list
+@login_required(login_url='login')
+def admin_doctors(request):
+    if not request.user.is_staff:
+        return redirect('patient_dashboard')
+
+    search = request.GET.get('q', '').strip()
+
+    doctors_list = doctor.objects.select_related('dept_name')
+
+    if search:
+        doctors_list = doctors_list.filter(
+            Q(doctor_name__icontains=search) |
+            Q(doctor_specialisation__icontains=search) |
+            Q(dept_name__dept_name__icontains=search)
+        )
+
+    return render(request, 'home/records_list.html', {
+        'page_title': 'Doctors',
+        'page_type': 'doctors',
+        'records': doctors_list.order_by('doctor_name'),
+        'search': search,
+    })
+
+
+# Staff-only department list
+@login_required(login_url='login')
+def admin_departments(request):
+    if not request.user.is_staff:
+        return redirect('patient_dashboard')
+
+    search = request.GET.get('q', '').strip()
+
+    departments_list = dept.objects.annotate(
+        total_doctors=Count('doctor', distinct=True)
+    )
+
+    if search:
+        departments_list = departments_list.filter(
+            dept_name__icontains=search
+        )
+
+    return render(request, 'home/records_list.html', {
+        'page_title': 'Departments',
+        'page_type': 'departments',
+        'records': departments_list.order_by('dept_name'),
+        'search': search,
+    })
+
+
+# Staff-only appointment list
+@login_required(login_url='login')
+def admin_appointments(request):
+    if not request.user.is_staff:
+        return redirect('patient_dashboard')
+
+    search = request.GET.get('q', '').strip()
+    selected_status = request.GET.get('status', '').strip()
+
+    appointments = Booking.objects.select_related(
+        'doctor_name',
+        'doctor_name__dept_name',
+        'user'
+    )
+
+    if search:
+        appointments = appointments.filter(
+            Q(patient_name__icontains=search) |
+            Q(patient_email__icontains=search) |
+            Q(patient_phone__icontains=search) |
+            Q(doctor_name__doctor_name__icontains=search)
+        )
+
+    if selected_status in dict(Booking.STATUS_CHOICES):
+        appointments = appointments.filter(status=selected_status)
+
+    return render(request, 'home/records_list.html', {
+        'page_title': 'Appointments',
+        'page_type': 'appointments',
+        'records': appointments.order_by('-booked_on', '-appointment_time'),
+        'search': search,
+        'selected_status': selected_status,
+        'status_choices': Booking.STATUS_CHOICES,
+    })
+
 
 
 @login_required(login_url='login')

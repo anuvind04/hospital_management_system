@@ -69,4 +69,29 @@ urlpatterns = [
         views.update_booking_status,
         name='update_booking_status'
     ),
+    
+    path(
+        'dashboard/patients/',
+        views.admin_patients,
+        name='admin_patients'
+    ),
+
+    path(
+        'dashboard/doctors/',
+        views.admin_doctors,
+        name='admin_doctors'
+    ),
+
+    path(
+        'dashboard/departments/',
+        views.admin_departments,
+        name='admin_departments'
+    ),
+
+    path(
+        'dashboard/appointments/',
+        views.admin_appointments,
+        name='admin_appointments'
+    ),
+
 ]

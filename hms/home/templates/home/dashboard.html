@@ -1,109 +1,281 @@
+
 {% extends 'base.html' %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}Hospital Dashboard{% endblock %}
 
 {% block content %}
+
 <h1 class="mb-4">Hospital Dashboard</h1>
 
-<div class="row g-3 mb-4">
-  <div class="col-6 col-lg-3">
-    <div class="card text-center shadow-sm h-100"><div class="card-body">
-      <h2>{{ total_doctors }}</h2><p class="mb-0 text-muted">Doctors</p>
-    </div></div>
-  </div>
-  <div class="col-6 col-lg-3">
-    <div class="card text-center shadow-sm h-100"><div class="card-body">
-      <h2>{{ total_patients }}</h2><p class="mb-0 text-muted">Patients</p>
-    </div></div>
-  </div>
-  <div class="col-6 col-lg-3">
-    <div class="card text-center shadow-sm h-100"><div class="card-body">
-      <h2>{{ total_appointments }}</h2><p class="mb-0 text-muted">Appointments</p>
-    </div></div>
-  </div>
-  <div class="col-6 col-lg-3">
-    <div class="card text-center shadow-sm h-100 border-warning"><div class="card-body">
-      <h2>{{ pending_appointments }}</h2><p class="mb-0 text-muted">Pending</p>
-    </div></div>
-  </div>
-</div>
+<!-- CLICKABLE DASHBOARD CARDS -->
 
 <div class="row g-3 mb-4">
-  <div class="col-lg-4">
-    <div class="card shadow-sm h-100">
-      <div class="card-header">Appointments by status</div>
-      <ul class="list-group list-group-flush">
-        {% for status, count in status_counts.items %}
-          <li class="list-group-item d-flex justify-content-between">
-            {{ status }} <span class="badge bg-secondary">{{ count }}</span>
-          </li>
-        {% endfor %}
-      </ul>
-    </div>
-  </div>
 
-  <div class="col-lg-8">
-    <div class="card shadow-sm h-100">
-      <div class="card-header">Today's appointments</div>
-      <div class="table-responsive">
-        <table class="table mb-0">
-          <thead><tr><th>Time</th><th>Patient</th><th>Doctor</th><th>Status</th></tr></thead>
-          <tbody>
-            {% for b in today_appointments %}
-              <tr>
-                <td>{{ b.appointment_time|time:"H:i" }}</td>
-                <td>{{ b.patient_name }}</td>
-                <td>{{ b.doctor_name }}</td>
-                <td>{{ b.status }}</td>
-              </tr>
-            {% empty %}
-              <tr><td colspan="4" class="text-center text-muted">No appointments today.</td></tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+    <div class="col-6 col-lg-3">
+        <a href="{% url 'admin_doctors' %}"
+           class="text-decoration-none text-dark">
+            <div class="card text-center shadow-sm h-100">
+                <div class="card-body">
+                    <h2>{{ total_doctors }}</h2>
+                    <p class="mb-0 text-muted">Doctors</p>
+                    <small class="text-primary">View all doctors →</small>
+                </div>
+            </div>
+        </a>
     </div>
-  </div>
+
+    <div class="col-6 col-lg-3">
+        <a href="{% url 'admin_patients' %}"
+           class="text-decoration-none text-dark">
+            <div class="card text-center shadow-sm h-100">
+                <div class="card-body">
+                    <h2>{{ total_patients }}</h2>
+                    <p class="mb-0 text-muted">Patients</p>
+                    <small class="text-primary">View all patients →</small>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-6 col-lg-3">
+        <a href="{% url 'admin_departments' %}"
+           class="text-decoration-none text-dark">
+            <div class="card text-center shadow-sm h-100">
+                <div class="card-body">
+                    <h2>{{ total_departments }}</h2>
+                    <p class="mb-0 text-muted">Departments</p>
+                    <small class="text-primary">View departments →</small>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-6 col-lg-3">
+        <a href="{% url 'admin_appointments' %}"
+           class="text-decoration-none text-dark">
+            <div class="card text-center shadow-sm h-100">
+                <div class="card-body">
+                    <h2>{{ total_appointments }}</h2>
+                    <p class="mb-0 text-muted">Appointments</p>
+                    <small class="text-primary">View all bookings →</small>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-6 col-lg-3">
+        <a href="{% url 'admin_appointments' %}?status=Pending"
+           class="text-decoration-none text-dark">
+            <div class="card text-center shadow-sm h-100 border-warning">
+                <div class="card-body">
+                    <h2>{{ pending_appointments }}</h2>
+                    <p class="mb-0 text-muted">Pending</p>
+                    <small class="text-primary">View pending →</small>
+                </div>
+            </div>
+        </a>
+    </div>
+
 </div>
+
+
+<!-- APPOINTMENTS BY STATUS AND TODAY'S APPOINTMENTS -->
+
+<div class="row g-3 mb-4">
+
+    <div class="col-lg-4">
+        <div class="card shadow-sm h-100">
+
+            <div class="card-header">
+                Appointments by status
+            </div>
+
+            <ul class="list-group list-group-flush">
+
+                {% for status, count in status_counts.items %}
+
+                <li class="list-group-item d-flex justify-content-between">
+
+                    <a href="{% url 'admin_appointments' %}?status={{ status|urlencode }}"
+                       class="text-decoration-none text-dark">
+                        {{ status }}
+                    </a>
+
+                    <span class="badge bg-secondary">
+                        {{ count }}
+                    </span>
+
+                </li>
+
+                {% endfor %}
+
+            </ul>
+
+        </div>
+    </div>
+
+
+    <div class="col-lg-8">
+
+        <div class="card shadow-sm h-100">
+
+            <div class="card-header">
+                Today's appointments
+            </div>
+
+            <div class="table-responsive">
+
+                <table class="table mb-0">
+
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Patient</th>
+                            <th>Doctor</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for b in today_appointments %}
+
+                        <tr>
+                            <td>{{ b.appointment_time|time:"H:i" }}</td>
+                            <td>{{ b.patient_name }}</td>
+                            <td>{{ b.doctor_name }}</td>
+                            <td>{{ b.status }}</td>
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+                            <td colspan="4"
+                                class="text-center text-muted">
+                                No appointments today.
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- BUSIEST DOCTORS AND RECENT BOOKINGS -->
 
 <div class="row g-3">
-  <div class="col-lg-4">
-    <div class="card shadow-sm h-100">
-      <div class="card-header">Busiest doctors</div>
-      <ul class="list-group list-group-flush">
-        {% for d in top_doctors %}
-          <li class="list-group-item d-flex justify-content-between">
-            <span>{{ d.doctor_name }} <small class="text-muted">({{ d.dept_name }})</small></span>
-            <span class="badge bg-primary">{{ d.total }}</span>
-          </li>
-        {% empty %}
-          <li class="list-group-item text-muted">No data yet.</li>
-        {% endfor %}
-      </ul>
-    </div>
-  </div>
 
-  <div class="col-lg-8">
-    <div class="card shadow-sm h-100">
-      <div class="card-header">Recent bookings</div>
-      <div class="table-responsive">
-        <table class="table mb-0">
-          <thead><tr><th>Patient</th><th>Doctor</th><th>Date</th><th>Status</th></tr></thead>
-          <tbody>
-            {% for b in recent_bookings %}
-              <tr>
-                <td>{{ b.patient_name }}</td>
-                <td>{{ b.doctor_name }}</td>
-                <td>{{ b.booked_on }}</td>
-                <td>{{ b.status }}</td>
-              </tr>
-            {% empty %}
-              <tr><td colspan="4" class="text-center text-muted">No bookings yet.</td></tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+    <div class="col-lg-4">
+
+        <div class="card shadow-sm h-100">
+
+            <div class="card-header">
+                Busiest doctors
+            </div>
+
+            <ul class="list-group list-group-flush">
+
+                {% for d in top_doctors %}
+
+                <li class="list-group-item d-flex justify-content-between">
+
+                    <span>
+                        {{ d.doctor_name }}
+                        <small class="text-muted">
+                            ({{ d.dept_name }})
+                        </small>
+                    </span>
+
+                    <span class="badge bg-primary">
+                        {{ d.total }}
+                    </span>
+
+                </li>
+
+                {% empty %}
+
+                <li class="list-group-item text-muted">
+                    No data yet.
+                </li>
+
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
     </div>
-  </div>
+
+
+    <div class="col-lg-8">
+
+        <div class="card shadow-sm h-100">
+
+            <div class="card-header d-flex justify-content-between align-items-center">
+
+                Recent bookings
+
+                <a href="{% url 'admin_appointments' %}"
+                   class="btn btn-sm btn-outline-primary">
+                    View all
+                </a>
+
+            </div>
+
+            <div class="table-responsive">
+
+                <table class="table mb-0">
+
+                    <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Doctor</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for b in recent_bookings %}
+
+                        <tr>
+                            <td>{{ b.patient_name }}</td>
+                            <td>{{ b.doctor_name }}</td>
+                            <td>{{ b.booked_on }}</td>
+                            <td>{{ b.status }}</td>
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+                            <td colspan="4"
+                                class="text-center text-muted">
+                                No bookings yet.
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
+
 {% endblock %}

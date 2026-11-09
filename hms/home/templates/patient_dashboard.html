@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Patient Dashboard | HMS</title>
 
     <style>
@@ -15,37 +16,45 @@
         }
 
         body {
-            background: #f4f7fb;
-            color: #263445;
+            background: #f3f6fb;
+            color: #243247;
         }
 
         .navbar {
             background: #123b63;
             color: white;
-            padding: 20px 5%;
+            padding: 18px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .navbar h2 {
-            font-size: 22px;
+            font-size: 21px;
         }
 
-        .navbar a {
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-links a {
             color: white;
             text-decoration: none;
-            margin-left: 20px;
+            font-size: 14px;
         }
 
         .container {
             width: 90%;
-            max-width: 1200px;
+            max-width: 1250px;
             margin: 35px auto;
         }
 
         .welcome {
-            margin-bottom: 25px;
+            margin-bottom: 28px;
         }
 
         .welcome h1 {
@@ -59,27 +68,28 @@
 
         .stats {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
             margin-bottom: 30px;
         }
 
         .stat-card {
             background: white;
-            padding: 25px;
+            padding: 23px;
             border-radius: 12px;
             box-shadow: 0 3px 12px #0000000a;
+            border-left: 4px solid #1479c9;
         }
 
         .stat-card h3 {
-            color: #718096;
             font-size: 14px;
+            color: #718096;
             margin-bottom: 12px;
         }
 
         .stat-card h2 {
-            color: #123b63;
             font-size: 30px;
+            color: #123b63;
         }
 
         .section {
@@ -92,66 +102,111 @@
 
         .section h2 {
             margin-bottom: 20px;
+            font-size: 21px;
         }
 
-        .profile-info p {
-            margin: 12px 0;
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .profile-item {
+            background: #f7f9fc;
+            padding: 16px;
+            border-radius: 8px;
+        }
+
+        .profile-item small {
+            display: block;
+            color: #718096;
+            margin-bottom: 7px;
+        }
+
+        .profile-item strong {
+            overflow-wrap: anywhere;
         }
 
         .book-btn {
             display: inline-block;
             background: #1479c9;
             color: white;
-            padding: 12px 20px;
+            padding: 12px 19px;
             border-radius: 7px;
             text-decoration: none;
             margin-bottom: 20px;
         }
 
-        .table-wrapper {
-            overflow-x: auto;
+        .appointment-card {
+            border: 1px solid #e5eaf1;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 18px;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 650px;
+        .appointment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 18px;
         }
 
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #edf0f4;
+        .appointment-header h3 {
+            color: #123b63;
+            margin-bottom: 5px;
         }
 
-        th {
-            background: #f5f8fc;
-            color: #526579;
+        .appointment-id {
+            color: #718096;
+            font-size: 13px;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .detail {
+            background: #f7f9fc;
+            padding: 13px;
+            border-radius: 8px;
+            overflow-wrap: anywhere;
+        }
+
+        .detail small {
+            display: block;
+            color: #718096;
+            margin-bottom: 7px;
         }
 
         .status {
-            padding: 6px 12px;
+            padding: 7px 13px;
             border-radius: 20px;
             font-size: 12px;
             font-weight: bold;
+            display: inline-block;
         }
 
-        .Pending {
+        .status-pending {
             background: #fff1c7;
             color: #936600;
         }
 
-        .Approved {
+        .status-approved {
             background: #d8f5e4;
             color: #167344;
         }
 
-        .Rejected, .Cancelled {
+        .status-rejected,
+        .status-cancelled {
             background: #ffe0e0;
             color: #b42318;
         }
 
-        .Completed {
+        .status-completed {
             background: #dceaff;
             color: #1754a3;
         }
@@ -160,31 +215,56 @@
             background: #dc3545;
             color: white;
             border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
+            padding: 10px 15px;
+            border-radius: 6px;
             cursor: pointer;
+            margin-top: 18px;
         }
 
         .empty {
             text-align: center;
-            padding: 30px;
+            padding: 40px 15px;
             color: #718096;
         }
 
-        @media(max-width: 800px) {
+        .empty h3 {
+            margin-bottom: 10px;
+            color: #243247;
+        }
+
+        @media(max-width: 850px) {
             .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .details-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
 
-        @media(max-width: 500px) {
-            .stats {
+        @media(max-width: 550px) {
+            .stats,
+            .profile-grid,
+            .details-grid {
                 grid-template-columns: 1fr;
             }
 
             .navbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .nav-links {
                 flex-wrap: wrap;
                 gap: 12px;
+            }
+
+            .welcome h1 {
+                font-size: 23px;
+            }
+
+            .section {
+                padding: 17px;
             }
         }
     </style>
@@ -195,26 +275,30 @@
 <nav class="navbar">
     <h2>Hospital Management System</h2>
 
-    <div>
+    <div class="nav-links">
         <a href="{% url 'index' %}">Home</a>
         <a href="{% url 'doctors' %}">Doctors</a>
+        <a href="{% url 'departments' %}">Departments</a>
         <a href="{% url 'booking' %}">Book Appointment</a>
 
-        <a href="{% url 'logout' %}">Logout</a>
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit"
+                style="background:none;border:none;color:white;cursor:pointer;font-size:14px;">
+                Logout
+            </button>
+        </form>
     </div>
 </nav>
 
 <div class="container">
 
     <div class="welcome">
-        <h1>
-            Welcome, {{ request.user.username }}!
-        </h1>
-
-        <p>
-            Manage your appointments and patient information.
-        </p>
+        <h1>Welcome, {{ request.user.username }}!</h1>
+        <p>Manage your personal information and hospital appointments.</p>
     </div>
+
+    <!-- Appointment Statistics -->
 
     <div class="stats">
 
@@ -238,41 +322,53 @@
             <h2>{{ completed_appointments }}</h2>
         </div>
 
-    </div>
+        <div class="stat-card">
+            <h3>Rejected</h3>
+            <h2>{{ rejected_appointments }}</h2>
+        </div>
 
-    <div class="section">
-
-        <h2>My Profile</h2>
-
-        <div class="profile-info">
-
-            <p>
-                <strong>Username:</strong>
-                {{ request.user.username }}
-            </p>
-
-            <p>
-                <strong>Email:</strong>
-                {{ request.user.email|default:"Not provided" }}
-            </p>
-
-            <p>
-                <strong>Phone:</strong>
-                {{ patient_profile.phone_number|default:"Not provided" }}
-            </p>
-
-            <p>
-                <strong>Address:</strong>
-                {{ patient_profile.address|default:"Not provided" }}
-            </p>
-
+        <div class="stat-card">
+            <h3>Cancelled</h3>
+            <h2>{{ cancelled_appointments }}</h2>
         </div>
 
     </div>
 
+    <!-- Patient Profile -->
+
+    <div class="section">
+        <h2>My Patient Profile</h2>
+
+        <div class="profile-grid">
+
+            <div class="profile-item">
+                <small>Username</small>
+                <strong>{{ request.user.username }}</strong>
+            </div>
+
+            <div class="profile-item">
+                <small>Email Address</small>
+                <strong>{{ request.user.email|default:"Not provided" }}</strong>
+            </div>
+
+            <div class="profile-item">
+                <small>Phone Number</small>
+                <strong>{{ patient_profile.phone_number|default:"Not provided" }}</strong>
+            </div>
+
+            <div class="profile-item">
+                <small>Address</small>
+                <strong>{{ patient_profile.address|default:"Not provided" }}</strong>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Appointment Details -->
+
     <div class="section">
 
-        <h2>My Appointments</h2>
+        <h2>My Booking Details</h2>
 
         <a href="{% url 'booking' %}" class="book-btn">
             + Book New Appointment
@@ -280,87 +376,96 @@
 
         {% if appointments %}
 
-        <div class="table-wrapper">
-            <table>
+            {% for appointment in appointments %}
 
-                <thead>
-                    <tr>
-                        <th>Doctor</th>
-                        <th>Department</th>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
+                <div class="appointment-card">
 
-                <tbody>
+                    <div class="appointment-header">
 
-                {% for appointment in appointments %}
+                        <div>
+                            <h3>{{ appointment.doctor_name.doctor_name }}</h3>
+                            <p class="appointment-id">
+                                Booking ID: #{{ appointment.id }}
+                            </p>
+                        </div>
 
-                    <tr>
+                        <span class="status status-{{ appointment.status|lower }}">
+                            {{ appointment.status }}
+                        </span>
 
-                        <td>
-                            {{ appointment.doctor_name.doctor_name }}
-                        </td>
+                    </div>
 
-                        <td>
-                            {{ appointment.doctor_name.dept_name.dept_name }}
-                        </td>
+                    <div class="details-grid">
 
-                        <td>
-                            {{ appointment.booked_on|date:"d M Y" }}
-                        </td>
+                        <div class="detail">
+                            <small>Patient Name</small>
+                            <strong>{{ appointment.patient_name }}</strong>
+                        </div>
 
-                        <td>
-                            {{ appointment.appointment_time|time:"h:i A" }}
-                        </td>
+                        <div class="detail">
+                            <small>Patient Email</small>
+                            <strong>{{ appointment.patient_email }}</strong>
+                        </div>
 
-                        <td>
-                            <span class="status {{ appointment.status }}">
-                                {{ appointment.status }}
-                            </span>
-                        </td>
+                        <div class="detail">
+                            <small>Phone Number</small>
+                            <strong>{{ appointment.patient_phone }}</strong>
+                        </div>
 
-                        <td>
+                        <div class="detail">
+                            <small>Doctor Specialization</small>
+                            <strong>{{ appointment.doctor_name.doctor_specialisation }}</strong>
+                        </div>
 
-                            {% if appointment.status == "Pending" or appointment.status == "Approved" %}
+                        <div class="detail">
+                            <small>Department</small>
+                            <strong>{{ appointment.doctor_name.dept_name.dept_name }}</strong>
+                        </div>
 
-                            <form method="POST"
-                                  action="{% url 'cancel_appointment' appointment.id %}">
+                        <div class="detail">
+                            <small>Appointment Date</small>
+                            <strong>{{ appointment.booked_on|date:"d M Y" }}</strong>
+                        </div>
 
-                                {% csrf_token %}
+                        <div class="detail">
+                            <small>Appointment Time</small>
+                            <strong>{{ appointment.appointment_time|time:"h:i A" }}</strong>
+                        </div>
 
-                                <button type="submit"
-                                        class="cancel-btn"
-                                        onclick="return confirm('Are you sure you want to cancel this appointment?')">
-                                    Cancel
-                                </button>
+                        <div class="detail">
+                            <small>Booking Created</small>
+                            <strong>{{ appointment.created_at|date:"d M Y, h:i A" }}</strong>
+                        </div>
 
-                            </form>
+                    </div>
 
-                            {% else %}
+                    {% if appointment.status == "Pending" or appointment.status == "Approved" %}
 
-                                No action
+                        <form method="POST"
+                            action="{% url 'cancel_appointment' appointment.id %}">
 
-                            {% endif %}
+                            {% csrf_token %}
 
-                        </td>
+                            <button type="submit"
+                                class="cancel-btn"
+                                onclick="return confirm('Are you sure you want to cancel this appointment?')">
+                                Cancel Appointment
+                            </button>
 
-                    </tr>
+                        </form>
 
-                {% endfor %}
+                    {% endif %}
 
-                </tbody>
+                </div>
 
-            </table>
-        </div>
+            {% endfor %}
 
         {% else %}
 
             <div class="empty">
-                <h3>No appointments found</h3>
+                <h3>No Appointments Found</h3>
                 <p>You haven't booked any appointments yet.</p>
+                <p>Click Book New Appointment to get started.</p>
             </div>
 
         {% endif %}
